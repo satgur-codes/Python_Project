@@ -31,9 +31,9 @@ To develop a program that books seats for a movie show.
 
 | ID | Movie             | Show Time | Base Price |
 |----|-------------------|-----------|------------|
-| 1  | Avengers: Endgame | 10:00 AM  | Rs. 200    |
-| 2  | Inception         | 02:00 PM  | Rs. 180    |
-| 3  | Interstellar      | 06:30 PM  | Rs. 250    |
+| 1  | Border 2 | 10:00 AM  | Rs. 200    |
+| 2  | Satluj         | 02:00 PM  | Rs. 180    |
+| 3  | Pushpa 2      | 06:30 PM  | Rs. 250    |
 
 > Rows 4 and 5 (back rows) add **Rs. 50** to the base price per seat.
 
