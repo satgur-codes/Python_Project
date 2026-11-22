@@ -1,7 +1,7 @@
 MOVIES = (
-    ("Avengers: Endgame", "10:00 AM", 200.0),
-    ("Inception", "02:00 PM", 180.0),
-    ("Interstellar", "06:30 PM", 250.0)
+    ("Border 2", "10:00 AM", 200.0),
+    ("Satluj", "02:00 PM", 180.0),
+    ("Pushpa 2", "06:30 PM", 250.0)
 )
 
 

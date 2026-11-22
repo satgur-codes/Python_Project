@@ -52,7 +52,7 @@ To develop a program that books seats for a movie show.
 ## 📁 File Structure
 
 ```
-Py_Project/
+Python_Project/
 ├── Movie_Ticket_Booking_System.py   # Main program
 ├── bookings.txt                     # Saved bookings (data file)
 └── README.md                        # Project documentation
@@ -63,8 +63,8 @@ Py_Project/
 1. Make sure Python 3 is installed.
 2. Clone the repository:
    ```bash
-   git clone <your-repo-url>
-   cd Py_Project
+   git clone https://github.com/satgur-codes/Python_Project.git
+   cd Python_Project
    ```
 3. Run the program:
    ```bash
@@ -86,7 +86,7 @@ Py_Project/
 
 ```
 --- BOOKING CONFIRMED ---
-Movie: Inception (02:00 PM)
+Movie: Border 2 (02:00 PM)
 Name : Rahul
 Seats: R3-S3
 Total: Rs. 180.0
