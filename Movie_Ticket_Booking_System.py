@@ -154,3 +154,90 @@ def view_bookings(movie_data, movie_id):
     for rec in data["bookings"][:10]:
         print(str(count) + ".", rec["name"], "| Seats:", format_seats(rec["seats"]), "| Paid: Rs.", rec["amount"])
         count = count + 1
+# Displays up to the first 10 customer bookings using a simple counter.
+
+
+def save_to_file(movie_data, filename):
+    with open(filename, "w") as f:
+        for m_id in movie_data:
+            for rec in movie_data[m_id]["bookings"]:
+                seat_parts = []
+                for r, c in rec["seats"]:
+                    seat_parts.append(str(r) + "-" + str(c))
+                seats_str = ";".join(seat_parts)
+                line = str(m_id) + "|" + rec["name"] + "|" + seats_str + "|" + str(rec["amount"]) + "\n"
+                f.write(line)
+# Saves all current bookings across all movies into a text file so data isn't lost on exit.
+
+
+def load_from_file(movie_data, filename):
+    try:
+        with open(filename, "r") as f:
+            for line in f:
+                line = line.strip()
+                if line == "":
+                    continue
+                parts = line.split("|")
+                m_id = int(parts[0])
+                name = parts[1]
+                raw_seats = parts[2].split(";")
+                amount = float(parts[3])
+
+                seats = []
+                for s in raw_seats:
+                    rc = s.split("-")
+                    r = int(rc[0])
+                    c = int(rc[1])
+                    seats.append((r, c))
+                    movie_data[m_id]["grid"][r - 1][c - 1] = "X"
+                    movie_data[m_id]["booked_set"].add((r, c))
+
+                movie_data[m_id]["bookings"].append({"name": name, "seats": seats, "amount": amount})
+    except FileNotFoundError:
+        pass
+# Reads saved bookings from the text file when the program starts and marks those seats as booked ('X').
+
+
+def main():
+    filename = "bookings.txt"
+    movie_data = {
+        1: {"info": MOVIES[0], "grid": create_seat_grid(), "booked_set": set(), "bookings": []},
+        2: {"info": MOVIES[1], "grid": create_seat_grid(), "booked_set": set(), "bookings": []},
+        3: {"info": MOVIES[2], "grid": create_seat_grid(), "booked_set": set(), "bookings": []}
+    }
+    load_from_file(movie_data, filename)
+
+    while True:
+        print("\n=== MOVIE TICKET BOOKING SYSTEM ===")
+        print("1. View Seat Map")
+        print("2. Book Tickets")
+        print("3. Cancel Booking")
+        print("4. View Bookings")
+        print("5. Save & Exit")
+        choice = input("Enter choice (1-5): ").strip()
+
+        if choice == "5":
+            save_to_file(movie_data, filename)
+            print("Saved. Goodbye!")
+            break
+        elif choice in ("1", "2", "3", "4"):
+            m_id = select_movie(movie_data)
+            if m_id == 0:
+                print("Invalid movie choice!")
+                continue
+            if choice == "1":
+                display_seat_map(movie_data[m_id]["grid"])
+            elif choice == "2":
+                if book_tickets(movie_data, m_id):
+                    save_to_file(movie_data, filename)
+            elif choice == "3":
+                if cancel_booking(movie_data, m_id):
+                    save_to_file(movie_data, filename)
+            elif choice == "4":
+                view_bookings(movie_data, m_id)
+        else:
+            print("Invalid option! Enter 1 to 5.")
+# Runs the main menu loop, connecting user choices to viewing, booking, cancelling, and saving data.
+
+
+main()
