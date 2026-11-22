@@ -64,7 +64,62 @@ def display_seat_map(grid):
 # Harshit Code-----
 
 
+def format_seats(seats):
+    parts = []
+    for r, c in seats:
+        parts.append("R" + str(r) + "-S" + str(c))
+    return ", ".join(parts)
+# Turns a list of seat coordinates like [(1, 2)] into readable text like "R1-S2".
 
+
+def select_movie(movie_data):
+    print("\n--- AVAILABLE MOVIES ---")
+    for m_id in movie_data:
+        name, time, price = movie_data[m_id]["info"]
+        print(str(m_id) + ".", name, "| Time:", time, "| Base Price: Rs.", price)
+    choice = input("Select Movie (1-3): ").strip()
+    if choice in ("1", "2", "3"):
+        return int(choice)
+    else:
+        return 0
+# Shows all available movies and returns the chosen movie ID (or 0 if invalid).
+
+
+def book_tickets(movie_data, movie_id):
+    data = movie_data[movie_id]
+    display_seat_map(data["grid"])
+
+    name = input("Enter customer name: ").strip().title()
+    if name == "":
+        print("Name cannot be empty!")
+        return False
+
+    try:
+        qty = int(input("How many tickets do you want to book? "))
+    except ValueError:
+        print("Please enter a valid number.")
+        return False
+
+    if qty < 1 or qty > 40:
+        print("Please enter a number between 1 and 40.")
+        return False
+
+    chosen = []
+    total_bill = 0.0
+    while len(chosen) < qty:
+        print("\nSelecting seat", len(chosen) + 1, "of", qty)
+        r_in = input("Enter Row (1-5): ").strip()
+        c_in = input("Enter Seat (1-8): ").strip()
+
+        if not (r_in.isdigit() and c_in.isdigit()):
+            print("Enter numbers only!")
+            continue
+
+        r = int(r_in)
+        c = int(c_in)
+        if r < 1 or r > 5 or c < 1 or c > 8:
+            print("Out of range! Row must be 1-5 and Seat 1-8.")
+        elif (r, c) in data["booked_set"] or (r, c) in chosen:
 
 
 #Satgur-Singh Code-----
