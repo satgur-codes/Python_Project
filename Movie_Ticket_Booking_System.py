@@ -54,3 +54,48 @@ def display_seat_map(grid):
 
     print("Total Available Seats:", total_free)
     print("-----------------------")
+
+
+
+
+
+
+
+# Harshit Code-----
+
+
+
+
+
+#Satgur-Singh Code-----
+def cancel_booking(movie_data, movie_id):
+    data = movie_data[movie_id]
+    if len(data["bookings"]) == 0:
+        print("No bookings found for this movie.")
+        return False
+
+    name = input("Enter customer name to cancel: ").strip().lower()
+    for rec in data["bookings"]:
+        if rec["name"].lower() == name:
+            for r, c in rec["seats"]:
+                data["grid"][r - 1][c - 1] = "O"
+                data["booked_set"].discard((r, c))
+            data["bookings"].remove(rec)
+            print("Booking cancelled for", rec["name"])
+            return True
+
+    print("No booking found under that name.")
+    return False
+# Finds a customer's booking by name, frees up their seats back to 'O', and deletes the record.
+
+
+def view_bookings(movie_data, movie_id):
+    data = movie_data[movie_id]
+    print("\n=== Bookings for", data["info"][0], "===")
+    if len(data["bookings"]) == 0:
+        print("No bookings yet.")
+        return
+    count = 1
+    for rec in data["bookings"][:10]:
+        print(str(count) + ".", rec["name"], "| Seats:", format_seats(rec["seats"]), "| Paid: Rs.", rec["amount"])
+        count = count + 1
