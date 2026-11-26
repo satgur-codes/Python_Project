@@ -15,7 +15,7 @@ def create_seat_grid():
 
 
 def count_free_in_row(row):
-    if len(row) == 0:
+    if len(row) == 0: 
         return 0
     if row[0] == "O":
         return 1 + count_free_in_row(row[1:])
@@ -34,7 +34,7 @@ def get_seat_price(base_price, row_num):
 
 def display_seat_map(grid):
     print("\n--- SCREEN THIS WAY ---")
-    print("     1 2 3 4 5 6 7 8")
+    print("       1 2 3 4 5 6 7 8")
     total_free = 0
     for r in range(5):
         row_text = "Row " + str(r + 1) + ": " + " ".join(grid[r])
@@ -134,18 +134,41 @@ def cancel_booking(movie_data, movie_id):
         return False
 
     name = input("Enter customer name to cancel: ").strip().lower()
+    r_in = input("Enter Row of the seat to cancel (1-5): ").strip()
+    c_in = input("Enter Seat number to cancel (1-8): ").strip()
+
+    if not (r_in.isdigit() and c_in.isdigit()):
+        print("Enter numbers only!")
+        return False
+
+    r = int(r_in)
+    c = int(c_in)
+    if r < 1 or r > 5 or c < 1 or c > 8:
+        print("Out of range! Row must be 1-5 and Seat 1-8.")
+        return False
+
     for rec in data["bookings"]:
-        if rec["name"].lower() == name:
-            for r, c in rec["seats"]:
-                data["grid"][r - 1][c - 1] = "O"
-                data["booked_set"].discard((r, c))
-            data["bookings"].remove(rec)
-            print("Booking cancelled for", rec["name"])
+        if rec["name"].lower() == name and (r, c) in rec["seats"]:
+            # free the seat
+            data["grid"][r - 1][c - 1] = "O"
+            data["booked_set"].discard((r, c))
+            rec["seats"].remove((r, c))
+
+            # reduce the amount paid by this seat's price
+            refund = get_seat_price(data["info"][2], r)
+            rec["amount"] = rec["amount"] - refund
+
+            # if no seats are left, delete the whole booking record
+            if len(rec["seats"]) == 0:
+                data["bookings"].remove(rec)
+
+            print("Seat", format_seats([(r, c)]), "cancelled for", rec["name"])
+            print("Refund: Rs.", refund)
             return True
 
-    print("No booking found under that name.")
+    print("No booking found for that name and seat.")
     return False
-# Finds a customer's booking by name, frees up their seats back to 'O', and deletes the record.
+# Asks name and seat, frees only that seat, refunds its price, and removes the booking if no seats remain.
 
 
 def view_bookings(movie_data, movie_id):
@@ -200,6 +223,7 @@ def load_from_file(movie_data, filename):
     except FileNotFoundError:
         pass
 # Reads saved bookings from the text file when the program starts and marks those seats as booked ('X').
+
 
 
 def main():
