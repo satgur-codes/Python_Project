@@ -148,17 +148,13 @@ def cancel_booking(movie_data, movie_id):
         return False
 
     for rec in data["bookings"]:
-        if rec["name"].lower() == name and (r, c) in rec["seats"]:
-            # free the seat
+        if rec["name"].lower() == name and (r, c) in rec["seats"]
             data["grid"][r - 1][c - 1] = "O"
             data["booked_set"].discard((r, c))
             rec["seats"].remove((r, c))
 
-            # reduce the amount paid by this seat's price
             refund = get_seat_price(data["info"][2], r)
             rec["amount"] = rec["amount"] - refund
-
-            # if no seats are left, delete the whole booking record
             if len(rec["seats"]) == 0:
                 data["bookings"].remove(rec)
 
